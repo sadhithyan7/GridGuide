@@ -87,6 +87,19 @@ uvicorn app.main:app --reload
 curl http://localhost:8000/health
 ```
 
+### Download the CERC dataset
+
+The downloader follows same-site links from [`urls.txt`](urls.txt), obeys
+`robots.txt`, saves linked documents to `data/raw/`, and records downloads in
+`data/manifest.csv`. Run it from the repository root:
+
+```powershell
+python -m app.tools.download .\urls.txt
+```
+
+Run the same command again to resume; URLs already recorded in the manifest
+are skipped. Review the source URLs and licensing terms before using the files.
+
 ## Live link
 
 To be added in Week 2 after deployment.
@@ -94,4 +107,3 @@ To be added in Week 2 after deployment.
 ## Project status
 
 GridGuide is being developed as a 12-week project, progressing from a regulation-focused retrieval-augmented generation (RAG) application to a supervised AI agent that can prepare responses with supporting regulatory references.
-
