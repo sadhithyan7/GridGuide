@@ -1,5 +1,7 @@
 # GridGuide
 
+[![CI](https://github.com/sadhithyan06/GridGuide/actions/workflows/ci.yml/badge.svg)](https://github.com/sadhithyan06/GridGuide/actions/workflows/ci.yml)
+
 GridGuide is a bilingual AI assistant that helps power-grid engineers and power traders find and understand Indian electricity regulations. It uses regulatory documents published by the Central Electricity Regulatory Commission (CERC) to provide relevant answers in English or Hindi, with references to the original clauses.
 
 ## Problem
@@ -23,9 +25,9 @@ The main technical challenge is cross-language retrieval: finding the correct En
 
 | Source | Link | Documents | Pages | Licence / terms |
 |---|---|---|---|---|
-| Central Electricity Regulatory Commission (CERC) | [cercind.gov.in](https://cercind.gov.in/) | Indian Electricity Grid Code and relevant regulations and amendments | To be recorded during ingestion | Officially published regulatory documents; verify the applicable terms for each document |
+| Central Electricity Regulatory Commission (CERC) | [cercind.gov.in](https://cercind.gov.in/) | Indian Electricity Grid Code and relevant regulations and amendments | 730 PDFs (~427 MB, 557+ key pages measured) | Officially published regulatory documents; verify the applicable terms for each document |
 
-**Target dataset:** At least 800 pages of relevant regulatory material. Actual document and page counts will be updated as the dataset is collected and processed.
+**Target dataset:** At least 800 pages of relevant regulatory material. Full manifest available in `data/manifest.csv` and details documented in [`DATASET.md`](DATASET.md).
 
 ## 10 real questions
 
@@ -33,9 +35,25 @@ The initial evaluation questions cover grid-code requirements, scheduling, devia
 
 See [`docs/QUESTIONS.md`](docs/QUESTIONS.md) for the question set.
 
+## Architecture and Design
+
+Detailed endpoint documentation, database schemas for pgvector, and sequence diagrams are in [`DESIGN.md`](DESIGN.md). Token usage, cost modeling, and pricing are in [`docs/COST.md`](docs/COST.md).
+
 ## Run it
 
-### 1. Create a virtual environment
+### Run with Docker (Recommended)
+
+Start the API and PostgreSQL with pgvector on a private container network:
+
+```bash
+cp .env.example .env
+docker compose up --build
+curl http://localhost:8000/ready
+```
+
+### Run Locally
+
+#### 1. Create a virtual environment
 
 ```bash
 python -m venv .venv
@@ -53,13 +71,13 @@ On Windows:
 .venv\Scripts\activate
 ```
 
-### 2. Install dependencies
+#### 2. Install dependencies
 
 ```bash
 pip install -r requirements-dev.txt
 ```
 
-### 3. Configure environment variables
+#### 3. Configure environment variables
 
 macOS/Linux:
 
@@ -75,16 +93,17 @@ copy .env.example .env
 
 Add the required configuration values to `.env` as specified by the project.
 
-### 4. Start the application
+#### 4. Start the application
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-### 5. Check the health endpoint
+#### 5. Check the health and readiness endpoints
 
 ```bash
 curl http://localhost:8000/health
+curl http://localhost:8000/ready
 ```
 
 ### Download the CERC dataset
@@ -102,7 +121,7 @@ are skipped. Review the source URLs and licensing terms before using the files.
 
 ## Live link
 
-To be added in Week 2 after deployment.
+Live deployment URL: [https://gridguide-api.onrender.com/health](https://gridguide-api.onrender.com/health) (Deployed on free container hosting).
 
 ## Project status
 
